@@ -195,6 +195,6 @@ function drawToolTip() {
 #force-chart {
     width: 45%;
     height: 100%;
-    background-color: rgb(16, 12, 42);
+    /* background-color: rgb(16, 12, 42); */
 }
 </style>

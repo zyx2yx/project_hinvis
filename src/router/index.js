@@ -1,12 +1,18 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/homePage.vue'
 import DetailView from '../views/detailPage.vue'
+import HINPage from '../views/HINPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
+      name: 'hinhome',
+      component: HINPage
+    },
+    {
+      path: '/deprecated',
       name: 'home',
       component: HomeView
     },
