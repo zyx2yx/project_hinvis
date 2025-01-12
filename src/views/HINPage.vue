@@ -22,6 +22,13 @@ import HanabiArc from '../components/hanabiArc.vue'
 import ForceCoreChart from '../components/forceCoreChart.vue'
 import ForceKeyPathChart from '../components/forceKeyPathChart.vue'
 
+// HIN
+import NodeSuggest from '../components/HINcomponents/NodeSuggest.vue'
+import TitleDataset from '../components/HINcomponents/TitleDataset.vue'
+import NodeSearch from '../components/HINcomponents/NodeSearch.vue'
+
+// HIN
+
 const router = useRouter()
 const route = useRoute()
 
@@ -132,13 +139,18 @@ function handleDetailParaLineData(objData){
 
 <template>
     <div id="page">
-      <div id="page-title">
-        此处为标题
+      <div id="page-title">大规模异构网络可视分析系统
+        <div id="title-dataset"><TitleDataset /></div>
+        <!-- <div id="title-name">大规模异构网络可视分析系统</div> -->
       </div>
       <div id="page-content">
         <div id="content-left">
-            <div id="cl-node-suggest">节点推荐列表</div>
-            <div id="cl-node-search">节点查询列表</div>
+            <div id="cl-node-suggest">
+              <NodeSuggest />
+            </div>
+            <div id="cl-node-search">
+              <NodeSearch />
+            </div>
             <div id="cl-node-selected">已选择节点</div>
             <div id="cl-search-layout-control">社区搜索与布局参数控制</div>
         </div>
@@ -161,12 +173,31 @@ function handleDetailParaLineData(objData){
     flex-direction: column;
 }
 #page div{
-    border: 1px black solid;
+    /* border: 1px black solid; */
+    font-size: inherit;
 }
 
 #page-title{
     width: 100%;
-    height: 20px;
+    height: 25px;
+    vertical-align: middle;
+    text-align: center;
+    background-color: #3a3a37;
+    font-size: 14px;
+    color: white;
+    /* display: flex; */
+    position: relative;
+}
+
+#title-dataset{
+  /* width: 100px; */
+  height: 100%;
+  position: absolute;
+  right: 10px;
+  top: 0px;
+}
+#title-name{
+  flex-grow: 1;
 }
 
 #page-content{
@@ -176,7 +207,7 @@ function handleDetailParaLineData(objData){
 }
 
 #content-left{
-    width: 30%;
+    width: 25%;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -198,7 +229,7 @@ function handleDetailParaLineData(objData){
 }
 
 #content-right{
-    width: 70%;
+    width: 75%;
     height: 100%;
     display: flex;
     flex-direction: column;

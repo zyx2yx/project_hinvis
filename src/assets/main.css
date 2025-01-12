@@ -35,3 +35,8 @@ html,body{
   z-index: 100;
   background-color: white;
 }
+
+/* HINdata 信息抽屉高度 */
+.open{
+  height: 50% !important;
+}
