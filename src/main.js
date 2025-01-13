@@ -8,6 +8,10 @@ import 'element-plus/theme-chalk/index.css';
  
 // import locale from 'element-plus/lib/locale/lang/zh-cn'
 import locale from "element-plus/es/locale/lang/zh-cn";
+import 'element-plus/dist/index.css'
+// import'@/assets/css/common.css'
+// import '@/assets/iconfont/iconfont.css'
+
 // import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 import './assets/main.css'

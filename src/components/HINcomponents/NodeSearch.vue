@@ -406,7 +406,7 @@ const options = [
             <div class="chart-header">节点查询</div>
         </el-col>
 
-        <el-col :span="16" style="display: flex; justify-content:flex-end">
+        <el-col :span="16" style="display: flex; justify-content:flex-end; padding: 0;">
             <!-- <span style="font-size: 12px; line-height: 25px;">nodeType&Attr：</span> -->
             <el-cascader v-model="value" :options="options" :props="props" @change="handleChange" 
                 placeholder="nodeType&Attr"
@@ -422,7 +422,7 @@ const options = [
 
 
 
-    <el-table v-if="isSearch" :data="tableData" style="width: 100%; height: calc(100% - 25px);" size="small">
+    <el-table v-if="isSearch" :data="tableData" class="chart-content" style="height: calc(100% - 25px)" size="small">
         <el-table-column fixed prop="idx" label="#id" width="50" />
         <el-table-column prop="date" label="Date" width="100" />
         <el-table-column prop="name" label="Name" width="70" />
@@ -439,15 +439,20 @@ const options = [
             </template>
         </el-table-column>
     </el-table>
-    <el-empty v-else description="There Is No Data" />
+    <el-empty v-else description="There Is No Data" class="chart-content" style="height: calc(100% - 25px) " :image-size="100"/>
 
 </template>
 
-<style>
+<style scoped>
 .chart-header {
     height: 25px;
     font-size: 15px;
     font-weight: bold;
     background-color: #e8e6e2;
+    margin-right: 0 !important;
+}
+.chart-content{
+    width: 100%; 
+    /* height: calc(100% - 25px); */
 }
 </style>

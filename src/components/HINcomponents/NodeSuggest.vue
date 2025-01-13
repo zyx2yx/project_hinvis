@@ -157,7 +157,7 @@ const typeOptions = [
         <el-col :span="8">
             <div class="chart-header">节点推荐</div>
         </el-col>
-        <el-col :span="16" style="display: flex; justify-content:flex-end">
+        <el-col :span="16" style="display: flex; justify-content:flex-end; padding: 0;">
             <span style="font-size: 12px; line-height: 25px;">nodeType：</span>
             <el-select v-model="valueNodeType" placeholder="Select" size="small" style="width: 80px; height: 20px;"> 
                 <el-option v-for="item in typeOptions" 
@@ -199,7 +199,7 @@ const typeOptions = [
 
 </template>
 
-<style>
+<style scoped>
 
 .el-row:last-child {
     margin-bottom: 0;
@@ -219,5 +219,6 @@ const typeOptions = [
     font-size: 15px;
     font-weight: bold;
     background-color: #e8e6e2;
+    margin-right: 0 !important;
 }
 </style>

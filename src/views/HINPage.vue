@@ -26,6 +26,9 @@ import ForceKeyPathChart from '../components/forceKeyPathChart.vue'
 import NodeSuggest from '../components/HINcomponents/NodeSuggest.vue'
 import TitleDataset from '../components/HINcomponents/TitleDataset.vue'
 import NodeSearch from '../components/HINcomponents/NodeSearch.vue'
+import NodesSelect from '../components/HINcomponents/NodesSelect.vue'
+import SearchLayoutControl from '../components/HINcomponents/SearchLayoutControl.vue'
+import LocalNodeLink from '../components/HINcomponents/LocalNodeLink.vue'
 
 // HIN
 
@@ -139,27 +142,46 @@ function handleDetailParaLineData(objData){
 
 <template>
     <div id="page">
+
       <div id="page-title">大规模异构网络可视分析系统
         <div id="title-dataset"><TitleDataset /></div>
         <!-- <div id="title-name">大规模异构网络可视分析系统</div> -->
       </div>
+
       <div id="page-content">
+
         <div id="content-left">
+
             <div id="cl-node-suggest">
               <NodeSuggest />
             </div>
+
             <div id="cl-node-search">
               <NodeSearch />
             </div>
-            <div id="cl-node-selected">已选择节点</div>
-            <div id="cl-search-layout-control">社区搜索与布局参数控制</div>
+
+            <div id="cl-node-selected">
+              <NodesSelect />
+            </div>
+
+            <div id="cl-local-nodelink">
+              <!-- <NodesSelect /> -->
+              <LocalNodeLink />
+            </div>
+
+            <div id="cl-search-layout-control">
+              <SearchLayoutControl />
+            </div>
+
         </div>
+
         <div id="content-right">
             <div id="cr-nodelink-chart"></div>
             <div id="cr-community-analysis">
                 待定
             </div>
         </div>
+
       </div>
     </div>
   </template>
@@ -213,19 +235,29 @@ function handleDetailParaLineData(objData){
     flex-direction: column;
 }
 
-#cl-node-suggest, #cl-node-search{
+#cl-node-suggest{
     width: 100%;
     height: 30%;
+}
+#cl-node-search{
+    width: 100%;
+    height: 21%;
 }
 
 #cl-node-selected{
     width: 100%;
-    height: 5%;
+    height: 9%;
+}
+
+#cl-local-nodelink{
+  width: 100%;
+  height: 30%;
+  background-color: #e8e6e2;
 }
 
 #cl-search-layout-control{
     width: 100%;
-    height: 35%;
+    height: 10%;
 }
 
 #content-right{
