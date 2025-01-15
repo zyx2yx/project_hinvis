@@ -208,6 +208,7 @@ function addEvent(selection, simulation) {
         .on("mousemove", function (event) {
             let [posX, posY] = d3.pointer(event, body); // 相对于body的坐标
             // let [canvasPosX, canvasPosY] = d3.pointer(event) // 相对于currentTarget 的坐标（zoom相关）
+            // 完成窗口坐标到canvas zoom后的坐标转换。在zoom过程中，只有坐标系发生变化，节点的坐标是不变的
             let [invertX, invertY] = transform.invert(d3.pointer(event)) // 节点坐标
             let current_node = simulation.find(invertX, invertY, 3)
             //   console.log('[posX, posY]:',posX, posY, ', [canvasPosX, canvasPosY]:', canvasPosX, canvasPosY);

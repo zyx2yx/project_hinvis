@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, watch, computed, ref } from 'vue'
+import { onMounted, watch, computed } from 'vue'
 import * as d3 from 'd3'
 import { storeToRefs } from 'pinia'
 import { useForceConfigStore } from '../../stores/forceConfigStore'
@@ -13,18 +13,16 @@ import G1 from '../../HIN_data/Ours/CAG/G1graph.json'
 console.log('G1:', G1);
 
 
-let svgWidth
-let svgHeight
+let canvasWidth
+let canvasHeight
 let ctx
 // 力导向图数据，使用store中的数据计算比较卡，原因未知...
-let forceRawData={}
+let forceRawData
 let transform = d3.zoomIdentity
 let promptBox = d3.select("#tooltip");
-let nodeControlTooltip
-let container
+let nodeControlTooltip = d3.select("#tooltip-node-control");
 let body = d3.select("body");
-let svg_chart
-let click_node_data = ref({})
+let canvas_chart
 
 const store = useForceConfigStore()
 const forceDataStore = useForceStore()
@@ -44,9 +42,6 @@ const zoomBehaviour = d3.zoom()
         transform = event.transform
         updataScaleFactor(transform)
         forceZoomed()
-        svg_chart.selectAll('g').attr('transform', transform);
-        // console.log('transform', transform);
-        
     })
     .on('end', () => {
         updateSimulating(false)
@@ -72,19 +67,13 @@ const zoomBehaviour = d3.zoom()
 
 
 onMounted(async () => {
-    svgWidth = document.getElementById('main-nl-chart').offsetWidth
-    svgHeight = document.getElementById('main-nl-chart').offsetHeight
-    nodeControlTooltip = d3.select("#main-tooltip");
-    container = d3.select('#main-nl-chart')
-    // console.log('svgWidth:', svgWidth, 'svgHeight:', svgHeight);
+    canvasWidth = document.getElementById('main-nl-chart').offsetWidth
+    canvasHeight = document.getElementById('main-nl-chart').offsetHeight
+    console.log('canvasWidth:', canvasWidth, 'canvasHeight:', canvasHeight);
 
 
-    svg_chart = d3.select('#main-force-canvas')
-        .attr('width', svgWidth)
-        .attr('height', svgHeight)
-        .attr("viewBox", [0, 0, svgWidth, svgHeight])
-        .style("font", "10px Microsoft Yahei");
-    // ctx = document.getElementById('main-force-canvas').getContext('2d')
+    canvas_chart = d3.select('#main-force-canvas').attr('width', canvasWidth).attr('height', canvasHeight)
+    ctx = document.getElementById('main-force-canvas').getContext('2d')
 
     // G1Graph(selectValue.value).then((res) => {
     //     forceRawData = res.data
@@ -93,6 +82,7 @@ onMounted(async () => {
 
     try {
         const data2 = await d3.json(`src/HIN_data/Ours/CAG/G2graph.json`)
+        forceRawData = data2
         const data3 = await d3.json(`src/HIN_data/Ours/CAG/G3graph.json`)
         draw(data2, data3)
     } catch (error) {
@@ -104,13 +94,13 @@ onMounted(async () => {
 function ticked(nodes, links, part) {
     ctx.save();
     if(part == 'left'){
-        ctx.clearRect(0, 0, svgWidth/2, svgHeight);
+        ctx.clearRect(0, 0, canvasWidth/2, canvasHeight);
     }
     else if(part == 'right'){
-        ctx.clearRect(svgWidth/2, 0, svgWidth, svgHeight);
+        ctx.clearRect(canvasWidth/2, 0, canvasWidth, canvasHeight);
     }
     else{
-        ctx.clearRect(0, 0, svgWidth, svgHeight);
+        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
     }
     // 不可以在ctx.save() ctx.restore() 之外绘制或者缩放，会出现未知问题 原因暂时未知
     ctx.translate(transform.x, transform.y);
@@ -145,26 +135,8 @@ function ticked(nodes, links, part) {
     drawToolTip()
 }
 
-function svg_ticked(nodes, links){
-    nodes
-    .attr('cx', d => d.x)
-    .attr('cy', d => d.y);
-    
-    links
-        .attr('x1', d => {
-            // console.log('d', d);
-            return d.source.x
-        })
-        .attr('y1', d => d.source.y)
-        .attr('x2', d => d.target.x)
-        .attr('y2', d => d.target.y);
-}
-
 const forceZoomed = () => {
-    // ticked(forceRawData.nodes, forceRawData.edges)
-    // svg_ticked(svg_chart.selectAll('g').selectAll('circle'), svg_chart.selectAll('g').selectAll('line'))
-    // console.log(svg_chart.selectAll('circle'), svg_chart.selectAll('line'));
-    
+    ticked(forceRawData.nodes, forceRawData.edges)
 }
 
 const drag = simulation => {
@@ -198,16 +170,16 @@ function draw(rawData1, rawData2) {
         manyBodyStrengDisMin,
         manyBodyStrengDisMax, } = forceConfig.value
 
-    let nodes1 = rawData1.nodes // {numID id type} numID对应边 id唯一标识节点
-    let links1 = rawData1.edges // {source,target} 
+    let nodes = rawData1.nodes // {numID id type} numID对应边 id唯一标识节点
+    let links = rawData1.edges // {source,target} 
 
-    const simulation1 = d3.forceSimulation(nodes1)
+    const simulation1 = d3.forceSimulation(nodes)
         .alphaDecay(0.05)
-        .force('links', d3.forceLink(links1).distance(0).strength(1).id(node => node.numID))
+        .force('links', d3.forceLink(links).distance(0).strength(1).id(node => node.numID))
         .force('charge', d3.forceManyBody().strength(-30).strength(manyBodyStrength).distanceMin(manyBodyStrengDisMin).distanceMax(manyBodyStrengDisMax))
         .force('collide', d3.forceCollide().radius(collideRadius).strength(collideStrength).iterations(collideIterations))
-        .force('center', d3.forceCenter(svgWidth / 4, svgHeight / 2))
-        // .on('tick', () => ticked(node1, links1, 'left'))
+        .force('center', d3.forceCenter(canvasWidth / 4, canvasHeight / 2))
+        .on('tick', () => ticked(nodes, links, 'left'))
         .on('end', () => {
             // updataRawData(rawData)
             updateSimulating(false)
@@ -221,51 +193,15 @@ function draw(rawData1, rawData2) {
         .force('links', d3.forceLink(links2).distance(0).strength(1).id(node => node.numID))
         .force('charge', d3.forceManyBody().strength(-30).strength(manyBodyStrength).distanceMin(manyBodyStrengDisMin).distanceMax(manyBodyStrengDisMax))
         .force('collide', d3.forceCollide().radius(collideRadius).strength(collideStrength).iterations(collideIterations))
-        .force('center', d3.forceCenter(svgWidth*3 / 4, svgHeight / 2))
-        // .on('tick', () => ticked(nodes2, links2, 'right'))
+        .force('center', d3.forceCenter(canvasWidth*3 / 4, canvasHeight / 2))
+        .on('tick', () => ticked(nodes2, links2, 'right'))
         .on('end', () => {
             // updataRawData(rawData)
             updateSimulating(false)
             // updataSimulation(simulation)
         })
-    
-    const nodelink_1gs = svg_chart.append('g')    
-    // 绘制链接
-    const linklist1 = nodelink_1gs.selectAll('line')
-        .data(links1)
-        .enter().append('line')
-        .attr('stroke', '#ccc')
-        .attr('stroke-width', 2);
 
-    // 绘制节点
-    const nodelist1 = nodelink_1gs.selectAll('circle')
-        .data(nodes1)
-        .enter().append('circle')
-        .attr('r', 5)
-        .attr('fill', d => colorConfig[d.type]);
-
-    const nodelink_2gs = svg_chart.append('g')
-    // 绘制链接
-    const linklist2 = nodelink_2gs.selectAll('line')
-        .data(links2)
-        .enter().append('line')
-        .attr('stroke', '#ccc')
-        .attr('stroke-width', 2);
-
-    // 绘制节点
-    const nodelist2 = nodelink_2gs.selectAll('circle')
-        .data(nodes2)
-        .enter().append('circle')
-        .attr('r', 5)
-        .attr('fill', d => colorConfig[d.type]);
-
-    simulation1.on('tick', () => svg_ticked(nodelist1, linklist1));  
-    simulation2.on('tick', () => svg_ticked(nodelist2, linklist2));  
-    // forceRawData.nodes = nodes1.concat(nodes2)
-    // forceRawData.links = links1.concat(links2)
-
-    // d3.select(ctx.canvas)
-    svg_chart
+    d3.select(ctx.canvas)
         // .call(drag(simulation)
         //     // 指定drag事件的目标，因为添加了zoom行为，因此要将获取的坐标x,y转化为原始的未缩放之前的节点坐标
         //     // 节点的坐标是一直不变的。
@@ -275,52 +211,8 @@ function draw(rawData1, rawData2) {
         //     // console.log('{x,y}:',x,y,', [invertX, invertY]:',invertX, invertY);
         //     return simulation.find(invertX, invertY, 3)
         // }))
-        .call(zoomBehaviour)
+        // .call(zoomBehaviour)
         // .call(addEvent, simulation)
-        .call(addEvent2Svg)
-}
-
-function addEvent2Svg(selection){
-    selection
-        .on("mouseover.over", function (event, d) {
-            
-        })
-        .on("mousemove", function (event, d) {
-            let [posX, posY] = d3.pointer(event, body); // 相对于body的坐标
-            if (event.target.tagName === 'circle') {
-                d = d3.select(event.target).datum();
-                promptBox
-                    .attr("class", "prompt-show")
-                    .text(d.numID + ':' + d.id)
-                    .style("top", posY - 15 + "px")
-                    .style("left", posX + 15 + "px")
-                // console.log(data);  // 输出绑定的数据
-            }
-            else {
-                promptBox
-                    .attr('class', 'prompt-hide')
-            }    
-        })
-        .on("mouseout.out", function () {
-
-        })
-        .on('click',function(event, d){
-            promptBox.attr('class', 'prompt-hide')
-
-            let [posX, posY] = d3.pointer(event); // 相对于container的坐标
-            if (event.target.tagName === 'circle') {
-                d = d3.select(event.target).datum();
-                click_node_data.value = d
-                nodeControlTooltip
-                    .attr("class", "prompt-show")
-                    .style("top", posY + "px")
-                    .style("left", posX + "px")
-            }
-            else {
-                nodeControlTooltip
-                    .attr('class', 'prompt-hide')
-            }
-        })
 }
 
 function addEvent(selection, simulation) {
@@ -385,7 +277,7 @@ function drawToolTip() {
     let cy
 
     for (const key of Object.keys(colorConfig)) {
-        cx = svgWidth * 0.85
+        cx = canvasWidth * 0.85
         cy = (currentRow++) * lineheight
 
         ctx.beginPath()
@@ -398,45 +290,11 @@ function drawToolTip() {
     }
 }
 
-
-function addToSet(){
-    console.log(`add ${click_node_data.value.id} to search set` , click_node_data);
-}
-function expandNode(){
-    console.log(`expand ${click_node_data.id}` );
-}
-function selectSelfNeighbor(){
-    console.log(`selectSelfNeighbor ${click_node_data.id}` );
-}
-function selectSelf(){
-    console.log(`selectSelfNeighbor ${click_node_data.id}` );
-}
-function cancelSelect(){
-    console.log(`cancelSelect ${click_node_data.id}` );
-}
-function copyNodeInfo(){
-    console.log(`naod name: ${click_node_data.id}` );
-}
-function quitPanel(){
-    nodeControlTooltip.attr('class', 'prompt-hide')
-}
-
-
 </script>
 
 <template>
     <div id="main-nl-chart">
-        <!-- <canvas id="main-force-canvas"></canvas> -->
-        <svg id="main-force-canvas"></svg>
-        <div id="main-tooltip" class="prompt-hide">
-            <div>{{ click_node_data.numID }}</div>
-            <div @click="selectSelf">选中节点</div>
-            <div @click="cancelSelect">取消选中</div>
-            <div @click="selectSelfNeighbor">选中邻居</div>
-            <div @click="addToSet">添加至查询</div>
-            <div @click="copyNodeInfo">复制节点名称</div>
-            <div @click="quitPanel">退出</div>
-        </div>
+        <canvas id="main-force-canvas"></canvas>
     </div>
 
 </template>
@@ -445,26 +303,10 @@ function quitPanel(){
 #main-nl-chart {
     width: 100%;
     height: 100%;
-    position: relative;
     /* flex-direction: column; */
     /* align-items: center;
     justify-content: center; */
     background-color: white;
-}
-#main-tooltip{
-    width: 100px;
-  font-size: 12px;
-  font-family: 'Microsoft Yahei';
-  border: none;
-  color: white;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-  background-color: rgba(0, 0, 0, 0.5);
-  cursor: pointer;
-}
-#main-tooltip >div:hover{
-  background-color: rgba(129, 253, 253, 0.5);
 }
 
 </style>

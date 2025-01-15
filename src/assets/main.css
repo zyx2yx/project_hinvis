@@ -5,6 +5,7 @@ html,body{
   padding: 0;
   width: 100%;
   height: 100%;
+  overflow: hidden;
 }
 .image-box{
   border: 1px solid rgb(3, 140, 189);
@@ -23,6 +24,7 @@ html,body{
 
 .prompt-hide {
   display: none;
+  visibility: hidden;
   pointer-events: none;
 }
 
@@ -56,4 +58,16 @@ html,body{
 /* HINdata 信息抽屉高度 */
 .open{
   height: 50% !important;
+}
+/* 修改滑动轨道颜色 */
+.el-slider__runway {
+  background-color: white;
+}
+  /* 滑动条颜色 */
+.el-slider__bar{
+  background-color: orange;
+}
+ /* 滑块颜色 */
+ .el-slider__button {
+  border: 2px solid orange;
 }

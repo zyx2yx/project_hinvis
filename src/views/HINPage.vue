@@ -30,6 +30,7 @@ import NodesSelect from '../components/HINcomponents/NodesSelect.vue'
 import SearchLayoutControl from '../components/HINcomponents/SearchLayoutControl.vue'
 import LocalNodeLink from '../components/HINcomponents/LocalNodeLink.vue'
 import MainNodeLink from '../components/HINcomponents/MainNodeLink.vue'
+import MainHeader from '../components/HINcomponents/MainHeader.vue'
 
 // HIN
 
@@ -179,7 +180,9 @@ import MainNodeLink from '../components/HINcomponents/MainNodeLink.vue'
 
         <div id="content-right">
             <div id="cr-nodelink-chart">
-              <div id="nc-header"></div>
+              <div id="nc-header">
+                <MainHeader />
+              </div>
               <div id="nc-body">
                 <MainNodeLink />
               </div>
@@ -288,12 +291,15 @@ import MainNodeLink from '../components/HINcomponents/MainNodeLink.vue'
 
 #nc-header{
   width: 100%;
-  height: 15%;
+  height: 50px;
+  border-left: 2px solid white;
   background-color: #e8e6e2;
+  flex-shrink: 0;
 }
 #nc-body{
   width: 100%;
-  height: 85%;
+  /* height: 85%; */
+  flex-grow: 1;
 }
 
 #cr-community-analysis{
