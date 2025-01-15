@@ -52,7 +52,7 @@ const formatTooltip_6 = (val: number) => {
         </el-row>
 
 
-        <div class="flex gap-2 chart-content" style="height: calc(100% - 25px)">
+        <div class="flex gap-2 chart-content">
             <div style="display: flex; flex-direction: column; flex-grow: 1; width: 90%; flex-shrink: 0;">
                 <div class="cc-row">
                     <div class="slider-demo-block">
@@ -129,10 +129,11 @@ const formatTooltip_6 = (val: number) => {
     /* height: calc(100% - 25px); */
     display: flex;
     /* align-items: flex-start; */
-    border: 1px #e8e6e2 solid;
+    /* border: 1px #e8e6e2 solid; */
     /* justify-content: space-around; */
     background-color: white;
     /* flex-direction: column; */
+    flex: 1;
 }
 
 .cc-row {

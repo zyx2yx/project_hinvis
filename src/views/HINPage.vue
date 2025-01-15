@@ -1,26 +1,26 @@
 <script setup>
-import {onMounted,watch} from 'vue'
-import {useRouter,useRoute} from 'vue-router'
-import {storeToRefs} from 'pinia'
-import {json} from 'd3'
+// import {onMounted,watch} from 'vue'
+// import {useRouter,useRoute} from 'vue-router'
+// import {storeToRefs} from 'pinia'
+// import {json} from 'd3'
 
-import { useForceConfigStore } from '../stores/forceConfigStore'
-import {setShortestPath} from '../stores/coreShortestPath'
-import {useCorePointsStore} from '../stores/CorePointsStore'
-import {useGroupInfo} from '../stores/groupInfoStore'
-import {useGroupPoints} from '../stores/groupPointsStore'
-import {useKeyGraphStore} from '../stores/keyPathStore'
+// import { useForceConfigStore } from '../stores/forceConfigStore'
+// import {setShortestPath} from '../stores/coreShortestPath'
+// import {useCorePointsStore} from '../stores/CorePointsStore'
+// import {useGroupInfo} from '../stores/groupInfoStore'
+// import {useGroupPoints} from '../stores/groupPointsStore'
+// import {useKeyGraphStore} from '../stores/keyPathStore'
 
  
-import SourceTable from "../components/sourceTable.vue";
-import ForceChart from "../components/forceChart.vue";
-import LightChart from "../components/lightChart.vue";
-import RectangleChart from "../components/rectangleChart.vue";
-// import LineChart from "../components/lineChart.vue";
-import ParaLineChart from '../components/paraLineChart.vue'
-import HanabiArc from '../components/hanabiArc.vue'
-import ForceCoreChart from '../components/forceCoreChart.vue'
-import ForceKeyPathChart from '../components/forceKeyPathChart.vue'
+// import SourceTable from "../components/sourceTable.vue";
+// import ForceChart from "../components/forceChart.vue";
+// import LightChart from "../components/lightChart.vue";
+// import RectangleChart from "../components/rectangleChart.vue";
+// // import LineChart from "../components/lineChart.vue";
+// import ParaLineChart from '../components/paraLineChart.vue'
+// import HanabiArc from '../components/hanabiArc.vue'
+// import ForceCoreChart from '../components/forceCoreChart.vue'
+// import ForceKeyPathChart from '../components/forceKeyPathChart.vue'
 
 // HIN
 import NodeSuggest from '../components/HINcomponents/NodeSuggest.vue'
@@ -29,91 +29,92 @@ import NodeSearch from '../components/HINcomponents/NodeSearch.vue'
 import NodesSelect from '../components/HINcomponents/NodesSelect.vue'
 import SearchLayoutControl from '../components/HINcomponents/SearchLayoutControl.vue'
 import LocalNodeLink from '../components/HINcomponents/LocalNodeLink.vue'
+import MainNodeLink from '../components/HINcomponents/MainNodeLink.vue'
 
 // HIN
 
-const router = useRouter()
-const route = useRoute()
+// const router = useRouter()
+// const route = useRoute()
 
-const forceConfigStore = useForceConfigStore()
-const { selectValue } = storeToRefs(forceConfigStore)
+// const forceConfigStore = useForceConfigStore()
+// const { selectValue } = storeToRefs(forceConfigStore)
 
-const corePointsStore = useCorePointsStore()
-const {updataCoreGraph,updataPoints} = corePointsStore
+// const corePointsStore = useCorePointsStore()
+// const {updataCoreGraph,updataPoints} = corePointsStore
 
-const groupInfo = useGroupInfo()
-const {setGroupInfo} = groupInfo
+// const groupInfo = useGroupInfo()
+// const {setGroupInfo} = groupInfo
 
-const groupPointsStore = useGroupPoints()
-const {setGroupPoints} = groupPointsStore
+// const groupPointsStore = useGroupPoints()
+// const {setGroupPoints} = groupPointsStore
 
-const keyGraphStore = useKeyGraphStore()
-const {updataKeyPoints,updataKeyGraph} = keyGraphStore
+// const keyGraphStore = useKeyGraphStore()
+// const {updataKeyPoints,updataKeyGraph} = keyGraphStore
 
-onMounted(() => {
-  console.log(route.params.id)
-  // 当切换团体时，更新核心资产最短路径文件
-  json(`../src/data/${selectValue.value}/core_shortest_paths.json`).then(value => {
-    setShortestPath(value)
-  })
+// onMounted(() => {
+//   console.log(route.params.id)
+//   // 当切换团体时，更新核心资产最短路径文件
+//   json(`../src/data/${selectValue.value}/core_shortest_paths.json`).then(value => {
+//     setShortestPath(value)
+//   })
 
-  // 组件挂载时，更新团体统计数据
-  json(`../src/data/${selectValue.value}/${selectValue.value}TypeFrequency.json`).then(value => {
-    setGroupInfo(value)
-  })
+//   // 组件挂载时，更新团体统计数据
+//   json(`../src/data/${selectValue.value}/${selectValue.value}TypeFrequency.json`).then(value => {
+//     setGroupInfo(value)
+//   })
 
-  // 组件挂载时，更新节点统计数据
-  json(`../src/data/${selectValue.value}/coreSource.json`).then(value => {
-    let result = value.slice(0,7)
-    setGroupPoints(handleDetailParaLineData(result))
-  })
-})
+//   // 组件挂载时，更新节点统计数据
+//   json(`../src/data/${selectValue.value}/coreSource.json`).then(value => {
+//     let result = value.slice(0,7)
+//     setGroupPoints(handleDetailParaLineData(result))
+//   })
+// })
 
-watch(selectValue,curV => {
+// watch(selectValue,curV => {
 
-  // 当切换团体时，更新核心资产最短路径文件
-  json(`../src/data/${curV}/core_shortest_paths.json`).then(value => {
-    setShortestPath(value)
-  })
+//   // 当切换团体时，更新核心资产最短路径文件
+//   json(`../src/data/${curV}/core_shortest_paths.json`).then(value => {
+//     setShortestPath(value)
+//   })
 
-  // 更新团体时，更新统计数据 
-  json(`../src/data/${curV}/${curV}TypeFrequency.json`).then(value => {
-    setGroupInfo(value)
-  })
+//   // 更新团体时，更新统计数据 
+//   json(`../src/data/${curV}/${curV}TypeFrequency.json`).then(value => {
+//     setGroupInfo(value)
+//   })
 
-  // 更新团体时，更新节点统计数据
-  json(`../src/data/${curV}/coreSource.json`).then(value => {
-    let result = value.slice(0,7)
-    setGroupPoints(handleDetailParaLineData(result))
-  })
+//   // 更新团体时，更新节点统计数据
+//   json(`../src/data/${curV}/coreSource.json`).then(value => {
+//     let result = value.slice(0,7)
+//     setGroupPoints(handleDetailParaLineData(result))
+//   })
 
-  // 修改当前选中团伙时，重置选中的核心资产相关信息
-  // corePointsStore.$reset() // 使用setup语法创建的store不会存在这个方法
-  updataCoreGraph({})
-  updataPoints([])
+//   // 修改当前选中团伙时，重置选中的核心资产相关信息
+//   // corePointsStore.$reset() // 使用setup语法创建的store不会存在这个方法
+//   updataCoreGraph({})
+//   updataPoints([])
 
-  // 修改当前选中团伙时，重置选中的关键路径相关信息
-  updataKeyPoints(null)
-  // updataCoreGraph({})
-})
+//   // 修改当前选中团伙时，重置选中的关键路径相关信息
+//   updataKeyPoints(null)
+//   // updataCoreGraph({})
+// })
 
-function handleDetailParaLineData(objData){
+// function handleDetailParaLineData(objData){
 
-  let arrData = []
-  for (let node of objData){
+//   let arrData = []
+//   for (let node of objData){
     
-      let typeArr = node.id.split('_')
-      if(typeArr[1].length<6){
-        node.type = typeArr[0]+'_'+typeArr[1]
-      }else {
-        node.type = typeArr[0]
-      }
+//       let typeArr = node.id.split('_')
+//       if(typeArr[1].length<6){
+//         node.type = typeArr[0]+'_'+typeArr[1]
+//       }else {
+//         node.type = typeArr[0]
+//       }
 
-      arrData.push([node.DC,node.PR,node.DS,node.numID,node.type,node.id])
-    }
+//       arrData.push([node.DC,node.PR,node.DS,node.numID,node.type,node.id])
+//     }
     
-  return arrData
-}
+//   return arrData
+// }
  
 </script>
 
@@ -154,6 +155,8 @@ function handleDetailParaLineData(objData){
 
             <div id="cl-node-suggest">
               <NodeSuggest />
+              <!-- <NodeSearch /> -->
+
             </div>
 
             <div id="cl-node-search">
@@ -165,7 +168,6 @@ function handleDetailParaLineData(objData){
             </div>
 
             <div id="cl-local-nodelink">
-              <!-- <NodesSelect /> -->
               <LocalNodeLink />
             </div>
 
@@ -176,7 +178,12 @@ function handleDetailParaLineData(objData){
         </div>
 
         <div id="content-right">
-            <div id="cr-nodelink-chart"></div>
+            <div id="cr-nodelink-chart">
+              <div id="nc-header"></div>
+              <div id="nc-body">
+                <MainNodeLink />
+              </div>
+            </div>
             <div id="cr-community-analysis">
                 待定
             </div>
@@ -238,6 +245,9 @@ function handleDetailParaLineData(objData){
 #cl-node-suggest{
     width: 100%;
     height: 30%;
+    /* height: 20%; */
+    display: flex;
+    flex-direction: column;
 }
 #cl-node-search{
     width: 100%;
@@ -247,6 +257,8 @@ function handleDetailParaLineData(objData){
 #cl-node-selected{
     width: 100%;
     height: 9%;
+    display: flex;
+    flex-direction: column;
 }
 
 #cl-local-nodelink{
@@ -270,6 +282,18 @@ function handleDetailParaLineData(objData){
 #cr-nodelink-chart{
     width: 100%;
     height: 65%;
+    display: flex;
+    flex-direction: column;
+}
+
+#nc-header{
+  width: 100%;
+  height: 15%;
+  background-color: #e8e6e2;
+}
+#nc-body{
+  width: 100%;
+  height: 85%;
 }
 
 #cr-community-analysis{

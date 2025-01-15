@@ -26,6 +26,7 @@ const handleChange = (value) => {
     console.log(value)
 }
 
+// 注意表格长度，当左侧填满是，会导致页面出现bug，原因难以找出
 const tableData = [
     {
         idx: 1,
@@ -78,47 +79,7 @@ const tableData = [
         tag: 'Office',
     },
     {
-        idx: 5,
-        date: '2016-05-01',
-        name: 'Tom',
-        state: 'California',
-        city: 'Los Angeles',
-        address: 'No. 189, Grove St, Los Angeles',
-        zip: 'CA 90036',
-        tag: 'Office',
-    },
-    {
-        idx: 5,
-        date: '2016-05-01',
-        name: 'Tom',
-        state: 'California',
-        city: 'Los Angeles',
-        address: 'No. 189, Grove St, Los Angeles',
-        zip: 'CA 90036',
-        tag: 'Office',
-    },
-    {
-        idx: 5,
-        date: '2016-05-01',
-        name: 'Tom',
-        state: 'California',
-        city: 'Los Angeles',
-        address: 'No. 189, Grove St, Los Angeles',
-        zip: 'CA 90036',
-        tag: 'Office',
-    },
-    {
-        idx: 5,
-        date: '2016-05-01',
-        name: 'Tom',
-        state: 'California',
-        city: 'Los Angeles',
-        address: 'No. 189, Grove St, Los Angeles',
-        zip: 'CA 90036',
-        tag: 'Office',
-    },
-    {
-        idx: 5,
+        idx: 6,
         date: '2016-05-01',
         name: 'Tom',
         state: 'California',
@@ -401,45 +362,61 @@ const options = [
 </script>
 
 <template>
-    <el-row :gutter="20" justify="start" class="chart-header">
-        <el-col :span="8">
-            <div class="chart-header">节点查询</div>
-        </el-col>
+    <div style="width: 100%; height: 100%; display: flex; flex-direction: column; flex: 0;">
 
-        <el-col :span="16" style="display: flex; justify-content:flex-end; padding: 0;">
-            <!-- <span style="font-size: 12px; line-height: 25px;">nodeType&Attr：</span> -->
-            <el-cascader v-model="value" :options="options" :props="props" @change="handleChange" 
-                placeholder="nodeType&Attr"
-                style="height: 20px; width: 150px;"
-                size="small"
-            />
-            <el-input v-model="input" style="width: 150px;height: 24px;" placeholder="Please input" 
-                
-            />
-            <el-button :icon="Search" size="small" color="#e8e6e2" @click="handleClick" />
-        </el-col>
-    </el-row>
+            <el-row :gutter="20" justify="start" class="chart-header">
+                <el-col :span="8">
+                    <div class="chart-header">节点查询</div>
+                </el-col>
+
+                <el-col :span="16" style="display: flex; justify-content:flex-end; padding: 0;">
+                    <!-- <span style="font-size: 12px; line-height: 25px;">nodeType&Attr：</span> -->
+                    <el-cascader v-model="value" :options="options" :props="props" @change="handleChange"
+                        placeholder="nodeType&Attr" style="height: 20px; width: 150px;" size="small" />
+                    <el-input v-model="input" style="width: 150px;height: 24px;" placeholder="Please input" />
+                    <el-button :icon="Search" size="small" color="#e8e6e2" @click="handleClick" />
+                </el-col>
+            </el-row>
+
+            <el-table v-if="isSearch" :data="tableData" size="small" style="height: 180px;">
+                <el-table-column fixed prop="idx" label="#id" width="50" />
+                <el-table-column prop="date" label="Date" width="100" />
+                <el-table-column prop="name" label="Name" width="70" />
+                <el-table-column prop="state" label="State" width="100" />
+                <el-table-column prop="city" label="City" width="120" />
+                <el-table-column prop="address" label="Address" width="600" />
+                <el-table-column prop="zip" label="Zip" width="120" />
+                <el-table-column fixed="right" label="操作" min-width="60">
+                    <template #default>
+                        <el-button link type="primary" size="small" @click="handleClick">
+                            Add
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <el-empty v-else description="There Is No Data" class="chart-content" :image-size="50" style="height: 180px;"/>
+            <!-- <el-table :data="tableData" size="small" style="width: 100%; flex: 1;">
+                <el-table-column fixed prop="idx" label="#id" width="50" />
+                <el-table-column prop="date" label="Date" width="100" />
+                <el-table-column prop="name" label="Name" width="70" />
+                <el-table-column prop="state" label="State" width="100" />
+                <el-table-column prop="city" label="City" width="120" />
+                <el-table-column prop="address" label="Address" width="600" />
+                <el-table-column prop="zip" label="Zip" width="120" />
+                <el-table-column fixed="right" label="操作" min-width="60">
+                    <template #default>
+                        <el-button link type="primary" size="small" @click="handleClick">
+                            Add
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table> -->
+
+    </div>
 
 
 
-    <el-table v-if="isSearch" :data="tableData" class="chart-content" style="height: calc(100% - 25px)" size="small">
-        <el-table-column fixed prop="idx" label="#id" width="50" />
-        <el-table-column prop="date" label="Date" width="100" />
-        <el-table-column prop="name" label="Name" width="70" />
-        <el-table-column prop="state" label="State" width="100" />
-        <el-table-column prop="city" label="City" width="120" />
-        <el-table-column prop="address" label="Address" width="600" />
-        <el-table-column prop="zip" label="Zip" width="120" />
-        <el-table-column fixed="right" label="操作" min-width="60">
-            <template #default>
-                <el-button link type="primary" size="small" @click="handleClick">
-                    Add
-                </el-button>
-                <!-- <el-button link type="primary" size="small">Edit</el-button> -->
-            </template>
-        </el-table-column>
-    </el-table>
-    <el-empty v-else description="There Is No Data" class="chart-content" style="height: calc(100% - 25px) " :image-size="100"/>
+
 
 </template>
 
@@ -451,8 +428,10 @@ const options = [
     background-color: #e8e6e2;
     margin-right: 0 !important;
 }
-.chart-content{
-    width: 100%; 
+
+.chart-content {
+    width: 100%;
+    /* flex: 0; */
     /* height: calc(100% - 25px); */
 }
 </style>

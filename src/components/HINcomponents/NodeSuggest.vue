@@ -56,7 +56,7 @@ const tableData = [
         tag: 'Office',
     },
     {
-        idx: 5,
+        idx: 6,
         date: '2016-05-01',
         name: 'Tom',
         state: 'California',
@@ -66,7 +66,7 @@ const tableData = [
         tag: 'Office',
     },
     {
-        idx: 5,
+        idx: 7,
         date: '2016-05-01',
         name: 'Tom',
         state: 'California',
@@ -76,27 +76,7 @@ const tableData = [
         tag: 'Office',
     },
     {
-        idx: 5,
-        date: '2016-05-01',
-        name: 'Tom',
-        state: 'California',
-        city: 'Los Angeles',
-        address: 'No. 189, Grove St, Los Angeles',
-        zip: 'CA 90036',
-        tag: 'Office',
-    },
-    {
-        idx: 5,
-        date: '2016-05-01',
-        name: 'Tom',
-        state: 'California',
-        city: 'Los Angeles',
-        address: 'No. 189, Grove St, Los Angeles',
-        zip: 'CA 90036',
-        tag: 'Office',
-    },
-    {
-        idx: 5,
+        idx: 7,
         date: '2016-05-01',
         name: 'Tom',
         state: 'California',
@@ -179,7 +159,9 @@ const typeOptions = [
         </el-col>
     </el-row>
 
-    <el-table :data="tableData" style="width: 100%; height: calc(100% - 25px);" size="small">
+    <!-- height: calc(100% - 25px); -->
+     <!-- 写死表格的高度，避免页面出问题 -->
+    <el-table :data="tableData" style="width: 100%; height: 250px;" size="small">
         <el-table-column fixed prop="idx" label="#id" width="50" />
         <el-table-column prop="date" label="Date" width="100" />
         <el-table-column prop="name" label="Name" width="70" />
@@ -192,7 +174,7 @@ const typeOptions = [
                 <el-button link type="primary" size="small" @click="handleClick">
                     Add
                 </el-button>
-                <!-- <el-button link type="primary" size="small">Edit</el-button> -->
+
             </template>
         </el-table-column>
     </el-table>

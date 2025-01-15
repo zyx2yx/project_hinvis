@@ -86,10 +86,11 @@ const showNodeInfo = () => {
 
 .chart-content {
     width: 100%;
-    height: calc(100% - 25px);
+    /* height: calc(100% - 25px); */
+    flex: 1;
     display: flex;
     /* align-items: flex-start; */
-    border: 1px #e8e6e2 solid;
+    /* border: 1px #e8e6e2 solid; */
     justify-content: space-between;
     padding-top: 10px;
 }

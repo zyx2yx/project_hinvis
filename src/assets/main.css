@@ -36,6 +36,23 @@ html,body{
   background-color: white;
 }
 
+#tooltip-node-control{
+  width: 100px;
+  font-size: 12px;
+  font-family: 'Microsoft Yahei';
+  border: none;
+  color: white;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  background-color: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+}
+
+#tooltip-node-control >div:hover{
+  background-color: rgba(129, 253, 253, 0.5);
+}
+
 /* HINdata 信息抽屉高度 */
 .open{
   height: 50% !important;
