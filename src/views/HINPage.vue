@@ -31,6 +31,11 @@ import SearchLayoutControl from '../components/HINcomponents/SearchLayoutControl
 import LocalNodeLink from '../components/HINcomponents/LocalNodeLink.vue'
 import MainNodeLink from '../components/HINcomponents/MainNodeLink.vue'
 import MainHeader from '../components/HINcomponents/MainHeader.vue'
+import NodeChordChart from '../components/HINcomponents/NodeChordChart.vue'
+import HINFlower from '../components/HINcomponents/HINFlower.vue'
+import CommunityCoreNode from '../components/HINcomponents/CommunityCoreNode.vue'
+import rectangleChart from '../components/HINcomponents/rectangleChart.vue'
+import ConnectPath from '../components/HINcomponents/ConnectPath.vue'
 
 // HIN
 
@@ -156,8 +161,6 @@ import MainHeader from '../components/HINcomponents/MainHeader.vue'
 
             <div id="cl-node-suggest">
               <NodeSuggest />
-              <!-- <NodeSearch /> -->
-
             </div>
 
             <div id="cl-node-search">
@@ -188,7 +191,24 @@ import MainHeader from '../components/HINcomponents/MainHeader.vue'
               </div>
             </div>
             <div id="cr-community-analysis">
-                待定
+                <div id="ca-left">
+                  <!-- <div id="ca-left-flower">
+                    <HINFlower />
+                  </div>
+                  <div id="ca-left-chord"> 
+                    <NodeChordChart /> 
+                  </div> -->
+                  <NodeChordChart /> 
+                </div>
+                <div id="ca-core-node">
+                  <CommunityCoreNode />
+                </div>
+                <div id="ca-node-matrix">
+                  <rectangleChart />
+                </div>
+                <div id="ca-node-path">
+                  <ConnectPath />
+                </div>
             </div>
         </div>
 
@@ -212,6 +232,7 @@ import MainHeader from '../components/HINcomponents/MainHeader.vue'
 #page-title{
     width: 100%;
     height: 25px;
+    /* height: 3%; */
     vertical-align: middle;
     text-align: center;
     background-color: #3a3a37;
@@ -234,8 +255,12 @@ import MainHeader from '../components/HINcomponents/MainHeader.vue'
 
 #page-content{
     width: 100%;
+    /* height: 96%; */
+    height: calc(100% - 25px) !important;
     display: flex;
-    flex-grow: 1;
+    flex-grow: 0; /**项目最开始时担心不自动填满设置成了1，结果后续总是出现页面填满时父元素被撑大的bug
+    困扰很久浪费很多时间，艹
+    */
 }
 
 #content-left{
@@ -280,6 +305,10 @@ import MainHeader from '../components/HINcomponents/MainHeader.vue'
     height: 100%;
     display: flex;
     flex-direction: column;
+    /* margin: 0 10px; */
+    /* border-left: 2px solid white; */
+    /* border-right: 2px solid white; */
+
 }
 
 #cr-nodelink-chart{
@@ -292,21 +321,41 @@ import MainHeader from '../components/HINcomponents/MainHeader.vue'
 #nc-header{
   width: 100%;
   height: 50px;
+  /* height: 10%; */
   border-left: 2px solid white;
   background-color: #e8e6e2;
   flex-shrink: 0;
 }
 #nc-body{
   width: 100%;
-  /* height: 85%; */
+  height: 90%;
   flex-grow: 1;
 }
 
 #cr-community-analysis{
     width: 100%;
     height: 35%;
+    display: flex;
+    /* flex-grow: 0; */
 }
-
+#ca-left{
+  width: 15%;
+  height: 100%;
+}
+#ca-core-node{
+  width: 25%;
+  height: 100%;
+  flex-grow: 0;
+  position: relative;
+}
+#ca-node-matrix{
+  width: 20%;
+  height: 100%;
+}
+#ca-node-path{
+  width: 40%;
+  height: 100%;
+}
 /*  */
 
 #detail-outer{

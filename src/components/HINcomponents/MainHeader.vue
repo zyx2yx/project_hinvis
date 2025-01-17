@@ -9,6 +9,7 @@ import {
     Star,
     Histogram,
     ArrowDown ,
+    ArrowDownBold,
 } from '@element-plus/icons-vue'
 
 const input3 = ref('')
@@ -81,10 +82,6 @@ const edgeType = [
 const legendValue_virtual = ref([])
 const legendColor_virtual = [
   {
-    value: '#E63415',
-    label: 'red',
-  },
-  {
     value: '#FF6600',
     label: 'orange',
   },
@@ -99,14 +96,6 @@ const legendColor_virtual = [
   {
     value: '#14CCCC',
     label: 'cyan',
-  },
-  {
-    value: '#4167F0',
-    label: 'blue',
-  },
-  {
-    value: '#6222C9',
-    label: 'purple',
   },
 ]
 
@@ -224,8 +213,9 @@ legendColor_virtual.forEach((color) => {
 
             </el-switch>
         </div>
-        <div style="width: 100px;">
+        <div style="width: 100px; display: flex;">
             <el-tag v-for="color in legendValue_virtual" :key="color" :color="color" />
+            <el-button :icon="ArrowDownBold" size="small" color="#fff" style="width: 25px;" />
         </div>
         <el-button :icon="Histogram" size="small" color="#dba0c0" />
     </div>
@@ -250,7 +240,7 @@ legendColor_virtual.forEach((color) => {
     line-height: 25px;
     font-size: 13px;
     font-weight: bold;
-    margin: 0 10px;
+    /* margin: 0 10px; */
     background-color: #e8e6e2;
     /* font-family:Verdana, Geneva, Tahoma, sans-serif; */
     

@@ -6,7 +6,7 @@ import { useForceConfigStore } from '../../stores/forceConfigStore'
 import { G1Graph } from '../../api/serverDataProvider'
 import { useForceStore } from '../../stores/forceStore'
 import { computeArrowPos } from '../../utils/computeArrowPos'
-import { colorConfig } from '../../utils/colorConfig'
+import { colorConfig, HINColorConfig, HINEdgeColorConfig } from '../../utils/colorConfig'
 
 import G1 from '../../HIN_data/Ours/CAG/G1graph.json'
 
@@ -91,13 +91,11 @@ onMounted(async () => {
     //     draw(res.data)
     // });
 
-    try {
-        const data2 = await d3.json(`src/HIN_data/Ours/CAG/G2graph.json`)
-        const data3 = await d3.json(`src/HIN_data/Ours/CAG/G3graph.json`)
-        draw(data2, data3)
-    } catch (error) {
-        console.log(error);
-    }
+
+    const data2 = await d3.json(`src/HIN_data/Ours/CAG/G2graph.json`)
+    const data3 = await d3.json(`src/HIN_data/Ours/CAG/G3graph.json`)
+    draw(data2, data3)
+
 })
 
 
@@ -437,6 +435,23 @@ function quitPanel(){
             <div @click="copyNodeInfo">复制节点名称</div>
             <div @click="quitPanel">退出</div>
         </div>
+        <div id="nodelink-tooltip">
+            <div>节点类型</div>
+            <div class="legend">
+                <div class="legen-item" v-for="n in HINColorConfig">
+                    <el-tag :key="n.color" :color="n.color" size="small" round="true"/>
+                    <span>{{ n.nodetype }}</span>
+                </div>
+            </div>
+            <div class="legend">
+                <div class="legen-item" v-for="n in HINEdgeColorConfig">
+                    <el-tag :key="n.color" :color="n.color" size="small" style="width: 50px; height: 5px;"/>
+                    <span>{{ n.edgetype }}</span>
+                </div>
+            </div>
+
+        </div>
+
     </div>
 
 </template>
@@ -466,5 +481,31 @@ function quitPanel(){
 #main-tooltip >div:hover{
   background-color: rgba(129, 253, 253, 0.5);
 }
+
+#nodelink-tooltip{
+    width: 150px;
+    height: 300px;
+    background-color: rgba(232, 230, 226,.5);
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.legend{
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    font-size: 12px;
+}
+.legen-item{
+    width: 50%;
+    flex-grow: 1;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+}
+/* .edge-lable{
+
+} */
 
 </style>
