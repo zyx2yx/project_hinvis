@@ -13,9 +13,7 @@ import G1 from '../../HIN_data/Ours/CAG/G1graph.json'
 console.log('G1:', G1);
 
 
-let svgWidth
-let svgHeight
-let ctx
+let svgWidth, svgHeight, ctx, svg_chart, nodes1, links1, nodes2, links2
 // 力导向图数据，使用store中的数据计算比较卡，原因未知...
 let forceRawData={}
 let transform = d3.zoomIdentity
@@ -23,7 +21,6 @@ let promptBox = d3.select("#tooltip");
 let nodeControlTooltip
 let container
 let body = d3.select("body");
-let svg_chart
 let click_node_data = ref({})
 
 const store = useForceConfigStore()
@@ -94,7 +91,8 @@ onMounted(async () => {
 
     const data2 = await d3.json(`src/HIN_data/Ours/CAG/G2graph.json`)
     const data3 = await d3.json(`src/HIN_data/Ours/CAG/G3graph.json`)
-    draw(data2, data3)
+    // draw(data2, data3)
+    draw(data2, JSON.parse(JSON.stringify(data2)))
 
 })
 
@@ -196,8 +194,8 @@ function draw(rawData1, rawData2) {
         manyBodyStrengDisMin,
         manyBodyStrengDisMax, } = forceConfig.value
 
-    let nodes1 = rawData1.nodes // {numID id type} numID对应边 id唯一标识节点
-    let links1 = rawData1.edges // {source,target} 
+    nodes1 = rawData1.nodes // {numID id type} numID对应边 id唯一标识节点
+    links1 = rawData1.edges // {source,target} 
 
     const simulation1 = d3.forceSimulation(nodes1)
         .alphaDecay(0.05)
@@ -212,8 +210,8 @@ function draw(rawData1, rawData2) {
             // updataSimulation(simulation)
         })
     
-    let nodes2 = rawData2.nodes
-    let links2 = rawData2.edges
+    nodes2 = rawData2.nodes
+    links2 = rawData2.edges
     const simulation2 = d3.forceSimulation(nodes2)
         .alphaDecay(0.05)
         .force('links', d3.forceLink(links2).distance(0).strength(1).id(node => node.numID))
@@ -396,24 +394,49 @@ function drawToolTip() {
     }
 }
 
+function addLine(selection, lineDatum){
+    selection.append('g')
+    .attr('id', lineDatum.edgeID)
+    .selectAll('line')
+        .data([lineDatum])
+        .enter().append('line')
+        .attr('stroke', '#f26223')
+        .attr('stroke-width', 4)
+        .attr('x1', d => d.source.x)
+        .attr('y1', d => d.source.y)
+        .attr('x2', d => d.target.x)
+        .attr('y2', d => d.target.y);
+}
+
 
 function addToSet(){
     console.log(`add ${click_node_data.value.id} to search set` , click_node_data);
 }
 function expandNode(){
-    console.log(`expand ${click_node_data.id}` );
+    console.log(`expand ${click_node_data.value.id}` );
 }
 function selectSelfNeighbor(){
-    console.log(`selectSelfNeighbor ${click_node_data.id}` );
+    console.log(`selectSelfNeighbor ${click_node_data.value.id}` );
 }
 function selectSelf(){
-    console.log(`selectSelfNeighbor ${click_node_data.id}` );
+    console.log(`selectSelfNeighbor ${click_node_data.value.id}` );
+    let selectNumID = click_node_data.value.numID
+    // 在nodes1,2中查找相同numID的node
+    let n1 = nodes1.find(n => n.numID === selectNumID)
+    let n2 = nodes2.find(n => n.numID === selectNumID)
+    let lineDatum = {source:{x:n1.x, y:n1.y},target:{x:n2.x, y:n2.y},edgeID:'id'+selectNumID}
+    // console.log('lineDatum:',lineDatum)
+
+    svg_chart.call(addLine, lineDatum)
+    nodeControlTooltip.attr('class', 'prompt-hide')
 }
 function cancelSelect(){
-    console.log(`cancelSelect ${click_node_data.id}` );
+    console.log(`cancelSelect ${click_node_data.value.id}` );
+    d3.select(`#main-force-canvas>#id${click_node_data.value.numID}`).remove()
+    nodeControlTooltip.attr('class', 'prompt-hide')
 }
 function copyNodeInfo(){
-    console.log(`naod name: ${click_node_data.id}` );
+    console.log(`naod name: ${click_node_data.value.id}` );
 }
 function quitPanel(){
     nodeControlTooltip.attr('class', 'prompt-hide')
@@ -438,14 +461,17 @@ function quitPanel(){
         <div id="nodelink-tooltip">
             <div>节点类型</div>
             <div class="legend">
-                <div class="legen-item" v-for="n in HINColorConfig">
-                    <el-tag :key="n.color" :color="n.color" size="small" round="true"/>
+                <div class="legend-item" v-for="n in HINColorConfig">
+                    <!-- <el-tag :key="n.color" :color="n.color" size="small" round="true"/> -->
+                     <div class="legend-circle" :style="{'background':n.color}"></div>
                     <span>{{ n.nodetype }}</span>
                 </div>
             </div>
+            <div>边类型</div>
             <div class="legend">
-                <div class="legen-item" v-for="n in HINEdgeColorConfig">
-                    <el-tag :key="n.color" :color="n.color" size="small" style="width: 50px; height: 5px;"/>
+                <div class="legend-item" v-for="n in HINEdgeColorConfig">
+                    <!-- <el-tag :key="n.color" :color="n.color" size="small" style="width: 50px; height: 5px;"/> -->
+                    <div class="legend-rect" :style="{'background':n.color}"></div>
                     <span>{{ n.edgetype }}</span>
                 </div>
             </div>
@@ -468,7 +494,7 @@ function quitPanel(){
 }
 #main-tooltip{
     width: 100px;
-  font-size: 12px;
+  font-size: 10px;
   font-family: 'Microsoft Yahei';
   border: none;
   color: white;
@@ -484,7 +510,7 @@ function quitPanel(){
 
 #nodelink-tooltip{
     width: 150px;
-    height: 300px;
+    height: 330px;
     background-color: rgba(232, 230, 226,.5);
     position: absolute;
     top: 0;
@@ -495,14 +521,28 @@ function quitPanel(){
     display: flex;
     width: 100%;
     flex-wrap: wrap;
-    font-size: 12px;
+    font-size: 11px;
 }
-.legen-item{
-    width: 50%;
+.legend-item{
+    /* width: 50%; */
+    min-width: 50%;
     flex-grow: 1;
     flex-shrink: 0;
     display: flex;
     align-items: center;
+    /* justify-content: space-around; */
+}
+.legend-circle{
+    width: 10px;
+    height: 10px;
+    margin: 0 5px;
+    flex-shrink: 0;
+    border-radius: 50%;
+}
+.legend-rect{
+    width: 50px; 
+    height: 3px;
+    margin: 0 5px;
 }
 /* .edge-lable{
 

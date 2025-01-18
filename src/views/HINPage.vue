@@ -36,6 +36,7 @@ import HINFlower from '../components/HINcomponents/HINFlower.vue'
 import CommunityCoreNode from '../components/HINcomponents/CommunityCoreNode.vue'
 import rectangleChart from '../components/HINcomponents/rectangleChart.vue'
 import ConnectPath from '../components/HINcomponents/ConnectPath.vue'
+import RadialTree from '../components/HINcomponents/RadialTree.vue'
 
 // HIN
 
@@ -172,7 +173,8 @@ import ConnectPath from '../components/HINcomponents/ConnectPath.vue'
             </div>
 
             <div id="cl-local-nodelink">
-              <LocalNodeLink />
+              <!-- <LocalNodeLink /> -->
+              <RadialTree />
             </div>
 
             <div id="cl-search-layout-control">
@@ -279,19 +281,19 @@ import ConnectPath from '../components/HINcomponents/ConnectPath.vue'
 }
 #cl-node-search{
     width: 100%;
-    height: 21%;
+    height: 12%;
 }
 
 #cl-node-selected{
     width: 100%;
-    height: 9%;
+    height: 8%;
     display: flex;
     flex-direction: column;
 }
 
 #cl-local-nodelink{
   width: 100%;
-  height: 30%;
+  height: 40%;
   background-color: #e8e6e2;
 }
 

@@ -6,8 +6,8 @@ const colorConfig = {
     Whois_Phone:'rgb(47, 166, 254)',
     Whois_Email:'rgb(47, 166, 254)',
     ASN:'rgb(165, 73, 185)',
-    IP_C:'rgb(165, 73, 185)',
-    '核心资产': 'rgb(241, 98, 132)',
+    IP_C:'#f9bf6f',
+    '选中节点': 'rgb(241, 98, 132)',
 }
 
 const HINColorConfig = [
@@ -18,7 +18,7 @@ const HINColorConfig = [
     {nodetype: 'Whois_Phone', color: 'rgb(47, 166, 254)'},
     {nodetype: 'Whois_Email', color: 'rgb(47, 166, 254)'},
     {nodetype: 'ASN', color: 'rgb(165, 73, 185)'},
-    {nodetype: 'IP_C', color: 'rgb(165, 73, 185)'},
+    {nodetype: 'IP_C', color: '#f9bf6f'},
     {nodetype: '选中节点', color: 'rgb(241, 98, 132)'},
 ]
 const HINEdgeColorConfig = [
